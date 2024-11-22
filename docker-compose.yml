@@ -1,0 +1,30 @@
+# version: "3.8" # Optional, specifies the version of Docker Compose to use
+
+services:
+  web:
+    build:
+      context: . # Update to '.' if Dockerfile is in the root directory
+    container_name: django_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/ # Bind the current directory to /usr/src/app in the container
+    ports:
+      - "8000:8000" # Expose port 8000
+    env_file:
+      - .env.dev # Path to the environment file
+    working_dir: /usr/src/app # Set the working directory inside the container
+    depends_on:
+      - db # Ensure the database service starts first
+
+  db:
+    image: postgres:15 # Use the official PostgreSQL image
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: dvmtask2 # Replace with your database name
+      POSTGRES_USER: dvmtask2 # Replace with your database user
+      POSTGRES_PASSWORD: test@123 # Replace with your database password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/ # Persist database data
+
+volumes:
+  postgres_data:
