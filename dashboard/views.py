@@ -22,6 +22,7 @@ def index(request):
     """
     return render(request, "dashboard/index.html")
 
+
 def search_trains(request):
     """
     Search for available trains based on user input.
@@ -55,13 +56,18 @@ def search_trains(request):
 
     # Prepare seat categories for each journey
     journeys_with_seat_categories = [
-        {"journey": journey, "seat_categories": JourneySeatCategory.objects.filter(journey=journey)}
+        {
+            "journey": journey,
+            "seat_categories": JourneySeatCategory.objects.filter(journey=journey),
+        }
         for journey in journeys
     ]
 
     # Check for errors
     error = None
-    if not journeys_with_seat_categories and (from_station or to_station or departure_date):
+    if not journeys_with_seat_categories and (
+        from_station or to_station or departure_date
+    ):
         error = "No journeys match your search criteria."
 
     return render(
@@ -96,7 +102,7 @@ def book_ticket(request, journey_id):
             seat_category = booking_form.cleaned_data["seat_category"]
             num_seats = len(
                 [form for form in passenger_formset.forms if form.cleaned_data]
-            )  # Calculate number of seats based on passengers
+            )
 
             total_price = num_seats * seat_category.base_price
             wallet = Wallet.objects.get(user=request.user)
@@ -111,8 +117,6 @@ def book_ticket(request, journey_id):
 
                 # Deduct wallet balance
                 wallet.withdraw(total_price)
-
-                # Generate ticket
                 ticket = Ticket.objects.create(
                     booking_user=request.user,
                     journey=journey,
@@ -120,8 +124,6 @@ def book_ticket(request, journey_id):
                     num_seats=num_seats,
                     price=total_price,
                 )
-
-                # Add Passengers
                 for form in passenger_formset.forms:
                     if form.cleaned_data:
                         passenger = Passenger.objects.create(
@@ -132,7 +134,7 @@ def book_ticket(request, journey_id):
                         ticket.passengers.add(passenger)
 
                 messages.success(request, "Booking successful!")
-                return redirect("my-tickets")  # Redirect to "My Tickets" page
+                return redirect("my-tickets")
 
             except ValueError as e:
                 messages.error(request, str(e))
@@ -152,6 +154,7 @@ def book_ticket(request, journey_id):
             "seat_categories": seat_categories,
         },
     )
+
 
 @login_required
 @transaction.atomic
@@ -173,14 +176,11 @@ def cancel_ticket(request, ticket_id):
         return redirect("my-tickets")
 
     try:
-        # Refund wallet balance
         wallet = Wallet.objects.get(user=request.user)
         wallet.deposit(ticket.price)
 
-        # Release seats
         ticket.journey_seat_category.cancel_seats(ticket.num_seats)
 
-        # Delete ticket
         ticket.delete()
 
         messages.success(request, "Ticket canceled successfully. Refund initiated.")
@@ -200,7 +200,6 @@ def my_tickets(request):
         "journey", "journey__train", "journey_seat_category"
     )
 
-    # Add a flag to indicate if the ticket is eligible for cancellation
     for ticket in tickets:
         departure_datetime = datetime.combine(
             ticket.journey.departure_date.date, ticket.journey.train.departure_time
