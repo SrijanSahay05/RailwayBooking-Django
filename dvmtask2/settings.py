@@ -20,10 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-default-secret-key")  # Default only for development
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "0") == "1"
+#DEBUG = os.getenv("DEBUG", "0") == "1"
+DEBUG = True
 
 # Allow hosts specified in environment variables
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = ["64.227.182.162", "127.0.0.1", "localhost"]
 
 # Custom user model
 AUTH_USER_MODEL = "users.CustomUser"
