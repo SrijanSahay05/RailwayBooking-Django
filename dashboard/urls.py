@@ -17,7 +17,7 @@ urlpatterns = [
     path("dashboard/", dashboard_views.user_dashboard, name="user-dashboard"),
     path("login/", users_views.login_view, name="login"),
     path("register/", users_views.register_view, name="register"),
-    path("logout/", users_views.logout, name="logout"),
+    path("logout/", users_views.logout_view, name="logout"),
     path(
         "journey-seats/",
         railway_views.populate_journey_seat_category,

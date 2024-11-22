@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Working directory inside the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -15,15 +15,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /app/
+COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the project files
-COPY . /app/
-
-# Add entry point script
-# COPY entrypoint.prod.sh /app/
-# RUN chmod +x /app/entrypoint.prod.sh
+COPY . /usr/src/app/
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
@@ -31,9 +27,5 @@ RUN python manage.py collectstatic --noinput
 # Expose the port for Gunicorn
 EXPOSE 8000
 
-
-# Use entry point
-ENTRYPOINT ["/app/entrypoint.prod.sh"]
-
-# # Gunicorn command to run the app
-# CMD ["gunicorn", "dvmtask2.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# Start the Gunicorn server
+CMD ["gunicorn", "dvmtask2.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
