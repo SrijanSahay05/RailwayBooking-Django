@@ -25,7 +25,7 @@ DEBUG = True
 
 # Allow hosts specified in environment variables
 #ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
-ALLOWED_HOSTS = ["64.227.182.162", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["64.227.182.162", "http://srijansahay05.in", "srijansahay05.in", "127.0.0.1", "localhost"]
 
 # Custom user model
 AUTH_USER_MODEL = "users.CustomUser"
@@ -164,3 +164,10 @@ LOGGING = {
         },
     },
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://64.227.182.162",  # Replace with your droplet's IP
+    "http://srijansahay05.in", "https://srijansahay05.in"
+]
