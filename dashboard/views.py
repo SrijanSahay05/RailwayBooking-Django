@@ -22,7 +22,6 @@ def index(request):
     """
     return render(request, "dashboard/index.html")
 
-
 def search_trains(request):
     """
     Search for available trains based on user input.
@@ -45,23 +44,25 @@ def search_trains(request):
 
     # Filter based on departure_date
     if departure_date:
-        journeys = journeys.filter(departure_date__date=departure_date)
+        try:
+            departure_date = datetime.strptime(departure_date, "%Y-%m-%d").date()
+            journeys = journeys.filter(departure_date__date=departure_date)
+        except ValueError:
+            journeys = journeys.none()  # Invalid date format returns no results
 
-    # Order by departure date and departure time
+    # Order by departure date and time
     journeys = journeys.order_by("departure_date__date", "train__departure_time")
+
+    # Prepare seat categories for each journey
+    journeys_with_seat_categories = [
+        {"journey": journey, "seat_categories": JourneySeatCategory.objects.filter(journey=journey)}
+        for journey in journeys
+    ]
 
     # Check for errors
     error = None
-    if not journeys.exists() and (from_station or to_station or departure_date):
+    if not journeys_with_seat_categories and (from_station or to_station or departure_date):
         error = "No journeys match your search criteria."
-
-    # Add journey seat categories to context
-    journeys_with_seat_categories = []
-    for journey in journeys:
-        seat_categories = JourneySeatCategory.objects.filter(journey=journey)
-        journeys_with_seat_categories.append(
-            {"journey": journey, "seat_categories": seat_categories}
-        )
 
     return render(
         request,
@@ -94,7 +95,7 @@ def book_ticket(request, journey_id):
         if booking_form.is_valid() and passenger_formset.is_valid():
             seat_category = booking_form.cleaned_data["seat_category"]
             num_seats = len(
-                [form for form in passenger_formset if form.cleaned_data]
+                [form for form in passenger_formset.forms if form.cleaned_data]
             )  # Calculate number of seats based on passengers
 
             total_price = num_seats * seat_category.base_price
@@ -121,12 +122,12 @@ def book_ticket(request, journey_id):
                 )
 
                 # Add Passengers
-                for passenger_form in passenger_formset:
-                    if passenger_form.cleaned_data:
+                for form in passenger_formset.forms:
+                    if form.cleaned_data:
                         passenger = Passenger.objects.create(
-                            name=passenger_form.cleaned_data["name"],
-                            age=passenger_form.cleaned_data["age"],
-                            gender=passenger_form.cleaned_data["gender"],
+                            name=form.cleaned_data["name"],
+                            age=form.cleaned_data["age"],
+                            gender=form.cleaned_data["gender"],
                         )
                         ticket.passengers.add(passenger)
 
@@ -151,7 +152,6 @@ def book_ticket(request, journey_id):
             "seat_categories": seat_categories,
         },
     )
-
 
 @login_required
 @transaction.atomic

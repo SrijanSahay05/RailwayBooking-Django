@@ -4,14 +4,12 @@
 <div class="container mt-4">
     <h2 class="mb-4 text-center">Search Trains</h2>
     
-    <!-- Error Display -->
     {% if error %}
     <div class="alert alert-danger text-center" role="alert">
         {{ error }}
     </div>
     {% endif %}
     
-    <!-- Search Form -->
     <form method="GET" action="{% url 'search-trains' %}">
         <div class="row">
             <div class="col-md-4 mb-3">
@@ -52,7 +50,6 @@
         </div>
     </form>
 
-    <!-- Search Results -->
     {% if journeys_with_seat_categories %}
     <hr>
     <h3 class="text-center mt-4">Search Results</h3>
@@ -72,13 +69,16 @@
         </thead>
         <tbody>
             {% for journey_data in journeys_with_seat_categories %}
+            {% with journey_data.seat_categories|length as seat_count %}
+            {% for seat_category in journey_data.seat_categories %}
             <tr>
-                <td rowspan="{{ journey_data.seat_categories|length }}">{{ journey_data.journey.train.name }}</td>
-                <td rowspan="{{ journey_data.seat_categories|length }}">{{ journey_data.journey.train.number }}</td>
-                <td rowspan="{{ journey_data.seat_categories|length }}">{{ journey_data.journey.departure_date.date }}</td>
-                <td rowspan="{{ journey_data.seat_categories|length }}">{{ journey_data.journey.train.departure_time }}</td>
-                <td rowspan="{{ journey_data.seat_categories|length }}">{{ journey_data.journey.train.arrival_time }}</td>
-                {% for seat_category in journey_data.seat_categories %}
+                {% if forloop.first %}
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.name }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.number }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.departure_date.date }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.departure_time }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.arrival_time }}</td>
+                {% endif %}
                 <td>{{ seat_category.seat_category.name }}</td>
                 <td>{{ seat_category.total_seats }}</td>
                 <td>{{ seat_category.available_seats }}</td>
@@ -89,11 +89,8 @@
                     </a>
                 </td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="9">No seat categories available for this journey.</td>
-            </tr>
             {% endfor %}
+            {% endwith %}
             {% endfor %}
         </tbody>
     </table>
