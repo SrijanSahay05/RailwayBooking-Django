@@ -25,7 +25,13 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'user-dashboard' %}">Dashboard</a>
+                            <a class="nav-link {% if request.resolver_match.url_name == 'user-dashboard' %}active{% endif %}" href="{% url 'user-dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'my-tickets' %}active{% endif %}" href="{% url 'my-tickets' %}">My Tickets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'add-money' %}active{% endif %}" href="{% url 'add-money' %}">Add Money</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

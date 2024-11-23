@@ -9,7 +9,7 @@
         </p>
         <hr class="my-4">
         <div class="d-flex justify-content-center gap-3">
-            <a class="btn btn-primary btn-lg" href="{% url 'search-trains' %}" role="button">Search Trains</a>
+            <a class="btn btn-primary btn-lg" href="{% url 'refresh-trains' %}" role="button">Search Trains</a>
             <a class="btn btn-success btn-lg" href="#" role="button">My Tickets</a>
         </div>
     </div>
@@ -34,7 +34,7 @@
                     <p class="card-text">
                         View and manage your existing bookings easily from your dashboard.
                     </p>
-                    <a href="#" class="btn btn-success">View Bookings</a>
+                    <a href="{%url 'user-dashboard' %}" class="btn btn-success">View Bookings</a>
                 </div>
             </div>
         </div>

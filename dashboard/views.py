@@ -90,6 +90,16 @@ def book_ticket(request, journey_id):
     View to handle ticket booking for a specific journey. Requires user login.
     """
     journey = get_object_or_404(Journey, id=journey_id)
+
+    # Check if the train's arrival time has passed
+    current_time = datetime.now()
+    arrival_datetime = datetime.combine(
+        journey.departure_date.date(), journey.train.arrival_time
+    )
+    if arrival_datetime < current_time:
+        messages.error(request, "Booking for this journey is no longer available.")
+        return redirect("search-trains")
+
     seat_categories = JourneySeatCategory.objects.filter(journey=journey)
 
     if request.method == "POST":

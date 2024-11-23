@@ -21,11 +21,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the project files
 COPY . /usr/src/app/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Copy the entrypoint script
+COPY entrypoint.prod.sh /usr/src/app/entrypoint.prod.sh
+
+# Ensure the entrypoint script is executable
+RUN chmod +x /usr/src/app/entrypoint.prod.sh
+
+# Collect static files (moved to entrypoint script for flexibility)
+# RUN python manage.py collectstatic --noinput
 
 # Expose the port for Gunicorn
 EXPOSE 8000
 
-# Start the Gunicorn server
-CMD ["gunicorn", "dvmtask2.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# Use the entrypoint script
+ENTRYPOINT ["/usr/src/app/entrypoint.prod.sh"]

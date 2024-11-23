@@ -17,15 +17,23 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-default-secret-key")  # Default only for development
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "unsafe-default-secret-key"
+)  # Default only for development
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.getenv("DEBUG", "0") == "1"
+# DEBUG = os.getenv("DEBUG", "0") == "1"
 DEBUG = True
 
 # Allow hosts specified in environment variables
-#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
-ALLOWED_HOSTS = ["64.227.182.162", "http://srijansahay05.in", "srijansahay05.in", "127.0.0.1", "localhost"]
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = [
+    "64.227.182.162",
+    "http://srijansahay05.in",
+    "srijansahay05.in",
+    "127.0.0.1",
+    "localhost",
+]
 
 # Custom user model
 AUTH_USER_MODEL = "users.CustomUser"
@@ -115,7 +123,6 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kolkata"  # Corrected timezone format
 USE_I18N = True
 USE_TZ = True
-
 # Static and Media files
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
@@ -136,7 +143,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Security settings
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "0"))  # Enable HSTS if needed
+SECURE_HSTS_SECONDS = int(
+    os.getenv("SECURE_HSTS_SECONDS", "0")
+)  # Enable HSTS if needed
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "0") == "1"
 SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "0") == "1"
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -169,5 +178,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
     "http://127.0.0.1",
     "http://64.227.182.162",  # Replace with your droplet's IP
-    "http://srijansahay05.in", "https://srijansahay05.in"
+    "http://srijansahay05.in",
+    "https://srijansahay05.in",
 ]
