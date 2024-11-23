@@ -19,7 +19,11 @@
             <p><strong>Available Seats:</strong></p>
             <ul>
                 {% for category in seat_categories %}
-                    <li>{{ category.seat_category.name }}: {{ category.available_seats }} seats available</li>
+                    <li>
+                        {{ category.seat_category.name }}: 
+                        {{ category.available_seats }} seats available 
+                        (₹{{ category.base_price }} per seat)
+                    </li>
                 {% endfor %}
             </ul>
         </div>
@@ -43,7 +47,7 @@
                 {{ passenger_formset.management_form }}
                 {{ passenger_formset.non_form_errors }}
                 {% for form in passenger_formset %}
-                    <div class="row mb-3">
+                    <div class="row mb-3 passenger-form">
                         <div class="col-md-4">
                             {{ form.name.label_tag }} {{ form.name }}
                         </div>
@@ -55,6 +59,14 @@
                         </div>
                     </div>
                 {% endfor %}
+            </div>
+        </div>
+
+        <!-- Total Price Display -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">Price Summary</div>
+            <div class="card-body text-center">
+                <p><strong>Total Price:</strong> ₹<span id="total-price">0.00</span></p>
             </div>
         </div>
 
@@ -71,16 +83,39 @@
 </div>
 
 <script>
-    // JavaScript to dynamically add more passenger forms
+    const seatCategorySelect = document.querySelector('#id_seat_category');
+    const totalPriceDisplay = document.querySelector('#total-price');
+    const passengerForms = document.querySelectorAll('.passenger-form');
+
+    // Update total price dynamically
+    function updateTotalPrice() {
+        const selectedCategory = seatCategorySelect.options[seatCategorySelect.selectedIndex];
+        const pricePerSeat = parseFloat(selectedCategory.getAttribute('data-price')) || 0;
+        const numPassengers = document.querySelectorAll('.passenger-form').length;
+
+        const totalPrice = pricePerSeat * numPassengers;
+        totalPriceDisplay.textContent = totalPrice.toFixed(2);
+    }
+
+    seatCategorySelect.addEventListener('change', updateTotalPrice);
+
+    // Add more passenger forms dynamically
     document.getElementById('add-passenger').addEventListener('click', function() {
-        let formset = document.querySelectorAll('.row');
-        let totalForms = document.querySelector('#id_form-TOTAL_FORMS');
-        let newForm = formset[0].cloneNode(true);
-        let formIndex = formset.length;
+        const formset = document.querySelectorAll('.passenger-form');
+        const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
+        const newForm = formset[0].cloneNode(true);
+        const formIndex = formset.length;
 
         newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)-/g, `form-${formIndex}-`);
         formset[formset.length - 1].after(newForm);
+
         totalForms.value = formIndex + 1;
+
+        // Recalculate the total price when adding new passengers
+        updateTotalPrice();
     });
+
+    // Initial total price calculation
+    updateTotalPrice();
 </script>
 {% endblock %}

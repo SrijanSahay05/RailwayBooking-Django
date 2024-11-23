@@ -1,37 +1,20 @@
-# Base Python image
 FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE 1  # Prevents .pyc files from being generated
+ENV PYTHONUNBUFFERED 1        # Ensures logs are flushed immediately
 
-# Environment variables for production
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Working directory inside the container
 WORKDIR /usr/src/app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the project files
 COPY . /usr/src/app/
-
-# Copy the entrypoint script
 COPY entrypoint.prod.sh /usr/src/app/entrypoint.prod.sh
-
-# Ensure the entrypoint script is executable
 RUN chmod +x /usr/src/app/entrypoint.prod.sh
 
-# Collect static files (moved to entrypoint script for flexibility)
-# RUN python manage.py collectstatic --noinput
-
-# Expose the port for Gunicorn
 EXPOSE 8000
 
-# Use the entrypoint script
 ENTRYPOINT ["/usr/src/app/entrypoint.prod.sh"]

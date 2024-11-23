@@ -62,6 +62,7 @@
                 <th>Departure Time</th>
                 <th>Arrival Time</th>
                 <th>Seat Category</th>
+                <th>Price</th>
                 <th>Total Seats</th>
                 <th>Available Seats</th>
                 <th>Actions</th>
@@ -80,6 +81,7 @@
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.arrival_time }}</td>
                 {% endif %}
                 <td>{{ seat_category.seat_category.name }}</td>
+                <td>₹{{ seat_category.base_price }}</td>
                 <td>{{ seat_category.total_seats }}</td>
                 <td>{{ seat_category.available_seats }}</td>
                 <td>

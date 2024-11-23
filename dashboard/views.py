@@ -31,6 +31,7 @@ def search_trains(request):
     to_station = request.GET.get("to_station", "").strip()
     departure_date = request.GET.get("departure_date", "").strip()
 
+    # Initialize queryset
     journeys = Journey.objects.all()
 
     # Filter based on from_station
@@ -46,12 +47,20 @@ def search_trains(request):
     # Filter based on departure_date
     if departure_date:
         try:
-            departure_date = datetime.strptime(departure_date, "%Y-%m-%d").date()
-            journeys = journeys.filter(departure_date__date=departure_date)
+            parsed_departure_date = datetime.strptime(departure_date, "%Y-%m-%d").date()
+            journeys = journeys.filter(departure_date__date=parsed_departure_date)
         except ValueError:
             journeys = journeys.none()  # Invalid date format returns no results
 
-    # Order by departure date and time
+    # Further filter journeys for only future departures
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+    journeys = journeys.filter(
+        Q(departure_date__date__gt=current_date)
+        | Q(departure_date__date=current_date, train__departure_time__gt=current_time)
+    )
+
+    # Order journeys by departure date and time
     journeys = journeys.order_by("departure_date__date", "train__departure_time")
 
     # Prepare seat categories for each journey
@@ -90,16 +99,6 @@ def book_ticket(request, journey_id):
     View to handle ticket booking for a specific journey. Requires user login.
     """
     journey = get_object_or_404(Journey, id=journey_id)
-
-    # Check if the train's arrival time has passed
-    current_time = datetime.now()
-    arrival_datetime = datetime.combine(
-        journey.departure_date.date(), journey.train.arrival_time
-    )
-    if arrival_datetime < current_time:
-        messages.error(request, "Booking for this journey is no longer available.")
-        return redirect("search-trains")
-
     seat_categories = JourneySeatCategory.objects.filter(journey=journey)
 
     if request.method == "POST":
@@ -119,7 +118,7 @@ def book_ticket(request, journey_id):
 
             if wallet.balance < total_price:
                 messages.error(request, "Insufficient wallet balance for booking!")
-                return redirect("add-money")
+                return redirect("refresh-trains")
 
             try:
                 # Deduct seats dynamically
