@@ -58,6 +58,8 @@
             <tr>
                 <th>Train Name</th>
                 <th>Train Number</th>
+                <th>Departure Station</th>
+                <th>Arrival Station</th>
                 <th>Departure Date</th>
                 <th>Departure Time</th>
                 <th>Arrival Time</th>
@@ -76,6 +78,8 @@
                 {% if forloop.first %}
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.name }}</td>
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.number }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.departure_station.name }}</td>
+                <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.arrival_station.name }}</td>
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.departure_date.date }}</td>
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.departure_time }}</td>
                 <td rowspan="{{ seat_count }}">{{ journey_data.journey.train.arrival_time }}</td>
