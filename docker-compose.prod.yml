@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: gunicorn dvmtask2.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn dvmtask2.wsgi:application --bind 0.0.0.0:8000 --workers 3 --threads 2    
     volumes:
       - ./staticfiles:/usr/src/app/staticfiles
       - ./mediafiles:/usr/src/app/mediafiles
