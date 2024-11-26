@@ -10,26 +10,13 @@
         <div class="card-body">
             <h3 class="card-title mb-3">Login</h3>
             
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                {{ form|crispy }}
-
-                <!-- Stacked Buttons -->
-                <div class="mt-4">
-                    <!-- Django Login Button with Additional Margin -->
-                    <button type="submit" class="btn btn-primary w-100 mb-4">Login</button>
-                    
-                    <!-- Google Login Button -->
+                               <!-- Google Login Button -->
                     <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-danger w-100 mb-4">
                         Continue with Google
                     </a>
                     
-                    <!-- Register Button -->
-                    <a href="{% url 'register' %}" class="btn btn-secondary w-100">
-                        Register
-                    </a>
-                </div>
-            </form>
+                    
+             
         </div>
     </div>
 </div>
