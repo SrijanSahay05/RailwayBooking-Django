@@ -46,6 +46,12 @@ class PassengerForm(forms.ModelForm):
             "gender": "Gender",
         }
 
+    def clean_age(self):
+        age = self.cleaned_data.get("age")
+        if age is not None and age < 0:
+            raise forms.ValidationError("Age cannot be negative.")
+        return age
+
 
 # Define a formset for multiple passengers
 PassengerFormSet = modelformset_factory(

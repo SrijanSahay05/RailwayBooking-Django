@@ -10,7 +10,7 @@
         <hr class="my-4">
         <div class="d-flex justify-content-center gap-3">
             <a class="btn btn-primary btn-lg" href="{% url 'refresh-trains' %}" role="button">Search Trains</a>
-            <a class="btn btn-success btn-lg" href="#" role="button">My Tickets</a>
+	    <a class="btn btn-success btn-lg" href="{% url 'my-tickets' %}" role="button">My Tickets</a>
         </div>
     </div>
 
@@ -35,17 +35,6 @@
                         View and manage your existing bookings easily from your dashboard.
                     </p>
                     <a href="{%url 'user-dashboard' %}" class="btn btn-success">View Bookings</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Customer Support</h5>
-                    <p class="card-text">
-                        Need help? Reach out to our 24/7 support team for assistance with bookings and queries.
-                    </p>
-                    <a href="#" class="btn btn-warning">Contact Support</a>
                 </div>
             </div>
         </div>

@@ -48,6 +48,9 @@
         <div class="text-center">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
+	<div class="text-center">
+		<a href = "{% url 'refresh-trains' %}" >REFRESH</a>
+	</div>
     </form>
 
     {% if journeys_with_seat_categories %}
