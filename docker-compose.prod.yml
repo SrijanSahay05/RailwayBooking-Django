@@ -35,7 +35,7 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
-      - "443:443"
+      - "443:400"
     volumes:
       - ./static:/usr/src/app/staticfiles
       - ./media:/usr/src/app/mediafiles
