@@ -1,0 +1,114 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Book Ticket for {{ journey.train.name }}</h2>
+
+    <!-- Journey Information -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">Journey Information</div>
+        <div class="card-body">
+            <p><strong>Train Name:</strong> {{ journey.train.name }}</p>
+            <p><strong>Train Number:</strong> {{ journey.train.number }}</p>
+            <p><strong>Departure Station:</strong> {{ journey.train.departure_station.name }}</p>
+            <p><strong>Arrival Station:</strong> {{ journey.train.arrival_station.name }}</p>
+            <p><strong>Departure Date:</strong> {{ journey.departure_date.date }}</p>
+            <p><strong>Departure Time:</strong> {{ journey.train.departure_time }}</p>
+            <p><strong>Arrival Time:</strong> {{ journey.train.arrival_time }}</p>
+            <p><strong>Journey Duration:</strong> {{ journey.train.calculate_journey_duration|default:"N/A" }}</p>
+            <p><strong>Available Seats:</strong></p>
+            <ul>
+                {% for category in seat_categories %}
+                    <li>
+                        {{ category.seat_category.name }}: 
+                        {{ category.available_seats }} seats available 
+                        (₹{{ category.base_price }} per seat)
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Booking Form -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Seat Selection</div>
+            <div class="card-body">
+                {{ booking_form.as_p }}
+            </div>
+        </div>
+
+        <!-- Passenger Details Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">Passenger Details</div>
+            <div class="card-body">
+                {{ passenger_formset.management_form }}
+                {{ passenger_formset.non_form_errors }}
+                {% for form in passenger_formset %}
+                    <div class="row mb-3 passenger-form">
+                        <div class="col-md-4">
+                            {{ form.name.label_tag }} {{ form.name }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.age.label_tag }} {{ form.age }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.gender.label_tag }} {{ form.gender }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <!-- Add More Passengers Button -->
+        <div class="mb-4 text-center">
+            <button type="button" id="add-passenger" class="btn btn-outline-primary">Add More Passengers</button>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Book Ticket</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const seatCategorySelect = document.querySelector('#id_seat_category');
+    const totalPriceDisplay = document.querySelector('#total-price');
+    const passengerForms = document.querySelectorAll('.passenger-form');
+
+    // Update total price dynamically
+    function updateTotalPrice() {
+        const selectedCategory = seatCategorySelect.options[seatCategorySelect.selectedIndex];
+        const pricePerSeat = parseFloat(selectedCategory.getAttribute('data-price')) || 0;
+        const numPassengers = document.querySelectorAll('.passenger-form').length;
+
+        const totalPrice = pricePerSeat * numPassengers;
+        totalPriceDisplay.textContent = totalPrice.toFixed(2);
+    }
+
+    seatCategorySelect.addEventListener('change', updateTotalPrice);
+
+    // Add more passenger forms dynamically
+    document.getElementById('add-passenger').addEventListener('click', function() {
+        const formset = document.querySelectorAll('.passenger-form');
+        const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
+        const newForm = formset[0].cloneNode(true);
+        const formIndex = formset.length;
+
+        newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)-/g, `form-${formIndex}-`);
+        formset[formset.length - 1].after(newForm);
+
+        totalForms.value = formIndex + 1;
+
+        // Recalculate the total price when adding new passengers
+        updateTotalPrice();
+    });
+
+    // Initial total price calculation
+    updateTotalPrice();
+</script>
+{% endblock %}

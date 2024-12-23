@@ -1,0 +1,9 @@
+[
+    { "model": "railways.day", "pk": 1, "fields": { "name": "Monday", "abbreviation": "Mon" } },
+    { "model": "railways.day", "pk": 2, "fields": { "name": "Tuesday", "abbreviation": "Tue" } },
+    { "model": "railways.day", "pk": 3, "fields": { "name": "Wednesday", "abbreviation": "Wed" } },
+    { "model": "railways.day", "pk": 4, "fields": { "name": "Thursday", "abbreviation": "Thu" } },
+    { "model": "railways.day", "pk": 5, "fields": { "name": "Friday", "abbreviation": "Fri" } },
+    { "model": "railways.day", "pk": 6, "fields": { "name": "Saturday", "abbreviation": "Sat" } },
+    { "model": "railways.day", "pk": 7, "fields": { "name": "Sunday", "abbreviation": "Sun" } }
+]

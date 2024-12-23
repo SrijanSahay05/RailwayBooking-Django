@@ -1,0 +1,44 @@
+[
+    {
+        "model": "railways.train",
+        "pk": 1,
+        "fields": {
+            "name": "Rajdhani Express",
+            "number": 12345,
+            "departure_station": 1,
+            "arrival_station": 2,
+            "departure_time": "18:00:00",
+            "arrival_time": "08:00:00",
+            "travel_days": 1,
+            "running_days": [1, 2, 3, 4, 5, 6, 7]
+        }
+    },
+    {
+        "model": "railways.train",
+        "pk": 2,
+        "fields": {
+            "name": "Shatabdi Express",
+            "number": 12001,
+            "departure_station": 2,
+            "arrival_station": 3,
+            "departure_time": "06:00:00",
+            "arrival_time": "12:00:00",
+            "travel_days": 0,
+            "running_days": [1, 2, 3, 4, 5]
+        }
+    },
+    {
+        "model": "railways.train",
+        "pk": 3,
+        "fields": {
+            "name": "Garib Rath",
+            "number": 12203,
+            "departure_station": 3,
+            "arrival_station": 4,
+            "departure_time": "20:00:00",
+            "arrival_time": "10:00:00",
+            "travel_days": 1,
+            "running_days": [2, 4, 6]
+        }
+    }
+]
