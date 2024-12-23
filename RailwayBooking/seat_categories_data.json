@@ -1,7 +1,0 @@
-[
-    { "model": "railways.seatcategory", "pk": 1, "fields": { "name": "Sleeper", "code": "SL" } },
-    { "model": "railways.seatcategory", "pk": 2, "fields": { "name": "AC 3 Tier", "code": "3AC" } },
-    { "model": "railways.seatcategory", "pk": 3, "fields": { "name": "AC 2 Tier", "code": "2AC" } },
-    { "model": "railways.seatcategory", "pk": 4, "fields": { "name": "First Class AC", "code": "1AC" } },
-    { "model": "railways.seatcategory", "pk": 5, "fields": { "name": "Chair Car", "code": "CC" } }
-]
